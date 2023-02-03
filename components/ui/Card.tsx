@@ -1,6 +1,7 @@
 import { StyleSheet, View, ViewProps } from "react-native";
 
 import colors from "../../constants/colors";
+import { DEVICE_WIDTH } from "../../constants/device";
 
 export default function Card({ children, style, ...props }: ViewProps) {
   return (
@@ -13,7 +14,7 @@ export default function Card({ children, style, ...props }: ViewProps) {
 const styles = StyleSheet.create({
   container: {
     padding: 16,
-    marginTop: 26,
+    marginTop: DEVICE_WIDTH < 380 ? 18 : 36,
     backgroundColor: colors.primary500,
     marginHorizontal: 24,
     borderRadius: 6,

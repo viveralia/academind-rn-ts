@@ -2,6 +2,7 @@ import { PropsWithChildren } from "react";
 import { StyleSheet, Text, View } from "react-native";
 
 import colors from "../../constants/colors";
+import { DEVICE_WIDTH } from "../../constants/device";
 import { Fonts } from "../../constants/fonts";
 
 export default function NumberContainer({
@@ -18,7 +19,7 @@ const styles = StyleSheet.create({
   container: {
     borderWidth: 4,
     borderColor: colors.accent500,
-    padding: 24,
+    padding: DEVICE_WIDTH < 380 ? 12 : 24,
     borderRadius: 8,
     margin: 24,
     alignItems: "center",
@@ -26,7 +27,7 @@ const styles = StyleSheet.create({
   },
   text: {
     color: colors.accent500,
-    fontSize: 36,
+    fontSize: DEVICE_WIDTH < 380 ? 28 : 36,
     fontFamily: Fonts.OpenSansBold,
   },
 });

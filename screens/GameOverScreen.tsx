@@ -1,8 +1,16 @@
-import { Image, StyleSheet, Text, View } from "react-native";
+import {
+  Image,
+  ScrollView,
+  StyleSheet,
+  Text,
+  useWindowDimensions,
+  View,
+} from "react-native";
 import PrimaryButton from "../components/ui/PrimaryButton";
 
 import Title from "../components/ui/Title";
 import colors from "../constants/colors";
+import { DEVICE_WIDTH } from "../constants/device";
 import { Fonts } from "../constants/fonts";
 
 type Props = {
@@ -16,14 +24,28 @@ export default function GameOverScreen({
   onStartNewGame,
   userNumber,
 }: Props): JSX.Element {
+  const { width, height } = useWindowDimensions();
+
+  let imageSize = 300;
+  if (width < 380) imageSize = 150;
+  if (height < 400) imageSize = 80;
+
+  const imgStyle = {
+    width: imageSize,
+    height: imageSize,
+    borderRadius: imageSize / 2,
+    borderWidth: 3,
+    borderColor: colors.primary800,
+  };
+
   return (
-    <View style={styles.rootContainer}>
+    <ScrollView contentContainerStyle={styles.contentContainer}>
       <Title>Game Over!</Title>
       <View style={styles.imageContainer}>
         <Image
           source={require("../assets/images/success.png")}
           resizeMode="cover"
-          style={styles.image}
+          style={[styles.image, imgStyle]}
         />
       </View>
       <Text style={styles.summaryText}>
@@ -32,24 +54,19 @@ export default function GameOverScreen({
         guess the number <Text style={styles.highlightText}>{userNumber}</Text>
       </Text>
       <PrimaryButton onPress={onStartNewGame}>Start new game</PrimaryButton>
-    </View>
+    </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
-  rootContainer: {
+  contentContainer: {
     flex: 1,
     alignItems: "center",
     justifyContent: "center",
     padding: 24,
   },
   imageContainer: {
-    width: 300,
-    height: 300,
-    borderRadius: 150,
     overflow: "hidden",
-    borderWidth: 3,
-    borderColor: colors.primary800,
     margin: 36,
   },
   image: {

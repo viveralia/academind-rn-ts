@@ -1,5 +1,11 @@
 import { useEffect, useState } from "react";
-import { Alert, FlatList, StyleSheet, Text, View } from "react-native";
+import {
+  Alert,
+  FlatList,
+  StyleSheet,
+  useWindowDimensions,
+  View,
+} from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 
 import NumberContainer from "../components/game/NumberContainer";
@@ -26,6 +32,8 @@ export default function GameScreen({
     generateRandomBetween(minBoundary, maxBoundary, userNumber)
   );
   const [guessRounds, setGuessRounds] = useState<number[]>([]);
+
+  const { width } = useWindowDimensions();
 
   useEffect(() => {
     minBoundary = 1;
@@ -54,9 +62,8 @@ export default function GameScreen({
     setGuessRounds((guesses) => [guess, ...guesses]);
   }
 
-  return (
-    <View style={styles.screen}>
-      <Title>Opponent's Guess</Title>
+  let content = (
+    <>
       <NumberContainer>{currentGuess}</NumberContainer>
       <Card>
         <InstructionText style={styles.instructionText}>
@@ -71,6 +78,29 @@ export default function GameScreen({
           </PrimaryButton>
         </View>
       </Card>
+    </>
+  );
+
+  if (width > 500) {
+    content = (
+      <View style={styles.containerWide}>
+        <View style={styles.buttonsContainerWide}>
+          <PrimaryButton onPress={nextGuessHandler.bind(this, "lower")}>
+            <Ionicons name="md-remove" size={24} color="white" />
+          </PrimaryButton>
+          <NumberContainer>{currentGuess}</NumberContainer>
+          <PrimaryButton onPress={() => nextGuessHandler("greater")}>
+            <Ionicons name="md-add" size={24} color="white" />
+          </PrimaryButton>
+        </View>
+      </View>
+    );
+  }
+
+  return (
+    <View style={styles.screen}>
+      <Title>Opponent's Guess</Title>
+      {content}
       <FlatList
         data={guessRounds}
         keyExtractor={(item) => item.toString()}
@@ -92,5 +122,12 @@ const styles = StyleSheet.create({
   },
   buttonsContainer: {
     flexDirection: "row",
+  },
+  containerWide: {
+    alignItems: "center",
+  },
+  buttonsContainerWide: {
+    flexDirection: "row",
+    alignItems: "center",
   },
 });
