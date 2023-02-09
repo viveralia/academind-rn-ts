@@ -1,11 +1,14 @@
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { useLayoutEffect } from "react";
+import { useContext, useLayoutEffect } from "react";
 import { Image, ScrollView, StyleSheet, Text } from "react-native";
 
 import { RootStackParamList } from "../App";
 import IconButton from "../components/IconButton";
 import MealDetails from "../components/MealDetails";
 import { MEALS } from "../data";
+// import { FavoritesContext } from "../store/context/FavoritesContext";
+import { useAppDispatch, useAppSelector } from "../store/redux/store";
+import { addFavorite, removeFavorite } from "../store/redux/favorites";
 
 export default function MealDetailsScreen({
   route,
@@ -14,8 +17,19 @@ export default function MealDetailsScreen({
   const { mealId } = route.params;
   const meal = MEALS.find((meal) => meal.id === mealId);
 
-  function headerRightButtonPressHandler() {
-    console.log(meal);
+  // const { addFavorite, ids, removeFavorite } = useContext(FavoritesContext);
+  const { ids } = useAppSelector((state) => state.favorites);
+  const dispatch = useAppDispatch();
+  const isFavorite = ids.includes(mealId);
+
+  // function headerRightButtonPressHandlerWithContext() {
+  //   if (isFavorite) removeFavorite(mealId);
+  //   else addFavorite(mealId);
+  // }
+
+  function headerRightButtonPressHandlerWithRedux() {
+    const action = isFavorite ? removeFavorite : addFavorite;
+    dispatch(action(mealId));
   }
 
   useLayoutEffect(() => {
@@ -23,12 +37,15 @@ export default function MealDetailsScreen({
       title: meal.title,
       headerRight: () => (
         <IconButton
-          materialIcon={(pressed) => (pressed ? "favorite" : "favorite-border")}
-          onPress={headerRightButtonPressHandler}
+          materialIcon={(pressed) => {
+            if (isFavorite) return "favorite";
+            return pressed ? "favorite" : "favorite-border";
+          }}
+          onPress={headerRightButtonPressHandlerWithRedux}
         />
       ),
     });
-  }, [mealId, navigation, headerRightButtonPressHandler]);
+  }, [mealId, navigation, headerRightButtonPressHandlerWithRedux, isFavorite]);
 
   return (
     <ScrollView style={styles.root}>

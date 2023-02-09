@@ -13,6 +13,7 @@ export default function IconButton({
   size = 28,
   color = "#fff",
   materialIcon,
+  ...props
 }: Props): JSX.Element {
   const sizeStyles = {
     width: size,
@@ -21,7 +22,7 @@ export default function IconButton({
   };
 
   return (
-    <Pressable style={[sizeStyles, styles.container]}>
+    <Pressable style={[sizeStyles, styles.container]} {...props}>
       {({ pressed }) => {
         function getIcon(): IconName {
           if (typeof materialIcon === "string") return materialIcon as IconName;

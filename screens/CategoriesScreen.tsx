@@ -1,10 +1,12 @@
 import { FlatList } from "react-native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
+import { CompositeScreenProps } from "@react-navigation/native";
+import { DrawerScreenProps } from "@react-navigation/drawer";
 
 import CategoryGridTile from "../components/CategoryGridTile";
 import { CATEGORIES } from "../data";
 import Category from "../models/category";
-import { RootStackParamList } from "../App";
+import { DrawerParamList, RootStackParamList } from "../App";
 
 function keyExtractor(item: Category) {
   return item.id;
@@ -12,7 +14,10 @@ function keyExtractor(item: Category) {
 
 export default function CategoriesScreen({
   navigation,
-}: NativeStackScreenProps<RootStackParamList, "MealsCategories">): JSX.Element {
+}: CompositeScreenProps<
+  NativeStackScreenProps<RootStackParamList, "Drawer">,
+  DrawerScreenProps<DrawerParamList, "Favorites">
+>): JSX.Element {
   function renderCategoryItem({ item }: { item: Category }): JSX.Element {
     function pressHandler() {
       navigation.navigate("MealsOverview", { categoryId: item.id });
